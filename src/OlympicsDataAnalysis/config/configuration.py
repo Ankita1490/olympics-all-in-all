@@ -1,6 +1,7 @@
+from logging import root
 import os
 from OlympicsDataAnalysis.constants import CONFIG_FILE_PATH
-from OlympicsDataAnalysis.entity.config_entity import DataIngestionConfig
+from OlympicsDataAnalysis.entity.config_entity import DataIngestionConfig, DataPreprocessConfig
 from OlympicsDataAnalysis.utils.common import read_yaml, create_directories
 
 class ConfigurationManager:
@@ -28,3 +29,16 @@ class ConfigurationManager:
         
         
         return data_ingestion_config
+    
+    def get_data_preprocess_config(self) -> DataPreprocessConfig:
+        config = self.config.data_preprocesing
+        is_exist = os.path.exists(config.root_dir)
+        if not is_exist:
+            create_directories([config.root_dir])
+            
+        data_preprocessing_config = DataPreprocessConfig(
+            root_dir= config.root_dir,
+            preprocessed_data_file_path= config.preprocessed_data_file_path
+        )
+        
+        return data_preprocessing_config
